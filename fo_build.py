@@ -2,8 +2,11 @@
 from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain import FAISS
+#from langchain import FAISS # No longer how FAISS is called
+from langchain.vectorstores import FAISS # New call method
 from llama_cpp import Llama
+from datetime import datetime
+
 
 cfg = {
     'db_dir' : './Desktop/FAISS-PC/ManU',
@@ -98,7 +101,17 @@ def output_backup():
     with open('./Desktop/FAISS-PC/sum_result_2.txt', 'w') as file:
         file.write(llm_r2)
 
-#------- Main
+#---------------------------------------------------------------------------
+# MAIN
+#---------------------------------------------------------------------------
+
+# --------- For Timing
+print('-'*110)
+start = datetime.now()
+print(start)
+
+
+# -------------------------------------- Primary Operations
 
 #documents = input_data()    #Generates Embeddings - Only need to run once
 #embed_save(documents)       #Generates Embeddings - Only need to run once
@@ -110,3 +123,7 @@ llm_r2 = llm_write(llm_r1)
 output_backup()
 
 
+# --------- For Timing
+finish = datetime.now()
+time = finish - start
+print(time)
