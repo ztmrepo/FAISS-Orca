@@ -130,7 +130,7 @@ test_data = v_query(vector_db)
 #print(llm_r1)
 #llm_r2 = llm_write(llm_r1)
 llm_r2 = llm_write(test_data)
-output_backup()
+#output_backup()
 
 
 # --------- For Timing
