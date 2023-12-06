@@ -2,8 +2,7 @@
 from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.embeddings import SentenceTransformerEmbeddings
-#from langchain import FAISS # No longer how FAISS is called
-from langchain.vectorstores import FAISS # New call method
+from langchain.vectorstores import FAISS
 from llama_cpp import Llama
 from datetime import datetime
 
@@ -105,22 +104,24 @@ def output_backup():
 # MAIN
 #---------------------------------------------------------------------------
 
+
+
+# -------------------------------------- Primary Operations
+
+documents = input_data()    #Generates Embeddings - Only need to run once
+embed_save(documents)       #Generates Embeddings - Only need to run once
+
 # --------- For Timing
 print('-'*110)
 start = datetime.now()
 print(start)
 
 
-# -------------------------------------- Primary Operations
-
-#documents = input_data()    #Generates Embeddings - Only need to run once
-#embed_save(documents)       #Generates Embeddings - Only need to run once
-
 llm_r1 = []
 vector_db = load_data()
 v_query(vector_db)
 llm_r2 = llm_write(llm_r1)
-output_backup()
+#output_backup()
 
 
 # --------- For Timing
