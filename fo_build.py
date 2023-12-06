@@ -1,20 +1,20 @@
 
-from langchain.document_loaders import PyPDFLoader, DirectoryLoader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.embeddings import SentenceTransformerEmbeddings
-from langchain.vectorstores import FAISS
 from llama_cpp import Llama
 from datetime import datetime
+from langchain.vectorstores import FAISS 
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.embeddings import SentenceTransformerEmbeddings
+from langchain.document_loaders import PyPDFLoader, DirectoryLoader
 
 
 cfg = {
-    'db_dir' : './Desktop/FAISS-PC/ManU',
-    'file_dir' : './Desktop/FAISS-PC/DATA',
+    'db_dir' : './Desktop/Python/FAISS/ManU',
+    'file_dir' : './Desktop/Python/FAISS/DATA',
+    #'model_path' : './llama.cpp/models/mistral-7b-openorca.Q4_0.gguf',
     'model_path' : './Documents/GitHub/llama.cpp/models/mistral-7b-openorca.Q4_0.gguf',
     'vector_query' : 'What is the commercial deal with Adidas?',
-    'sum_prompt_1' : 'You are an equity research analyst. Read the following article and summarize it as a list of facts. Have only one fact per line. Only include facts that are directly mentioned in the article. Ignore information not related to Adidas. Article: ',
-    'sum_prompt_2' : 'You are an equity research analyst. Take this article which is is structured as a list of facts and turn it into a written summary of the deal with Adidas. Only include facts that are directly mentioned in the article. Only include information relevant to the Adidas relationship. Prioritize financial amounts, agreement term lengths (years), and operating terms. Article: '
-        
+    'sum_prompt_1' : 'You are an equity research analyst. Read the following article and summarize it as a list of facts. Have only one fact per line. Only include facts that are directly mentioned in the article. Article: ',
+    'sum_prompt_2' : 'You are an equity research analyst. Summarize the provided article. Only include facts that are directly mentioned in the article. Prioritize financial amounts, agreement term lengths (years), and operating terms. Do not include information not about the agreement with Adidas. Article: '
 }
 
 # --- FAIS Functions
@@ -56,6 +56,7 @@ def v_query(v_db):
         print(f'Score : {score}\n')
 
         #result_string = str(doc.page_content) + '[[Page]]' + str(doc.metadata["page"])
+        #v_result.append(result_string)
         #llm_sum(result_string)
 
     return docs_and_scores
@@ -77,10 +78,12 @@ def llm_sum(v_data):
 
 def llm_write(v_data):
    
-    llm = Llama(model_path=cfg['model_path'], n_ctx=4096, n_gpu_layers = 30) 
+    llm = Llama(model_path=cfg['model_path'], n_ctx=4096, n_gpu_layers = 30, verbose= False) 
 
     prompt = cfg['sum_prompt_2']
     article = str(v_data)
+    #print (article)
+
     query = prompt + article
     
     output = llm(query, max_tokens=4096)
@@ -91,25 +94,22 @@ def llm_write(v_data):
     print('-'*80)
     print(output)
 
-    return text_content
+    return str(output)
 
 def output_backup():
-    with open('./Desktop/FAISS-PC/sum_result_1.txt', 'w') as file:
+
+    with open('./Desktop/Python/FAISS/sum_result_0.txt', 'w') as file:
+        file.write('\n'.join(v_result))
+
+    with open('./Desktop/Python/FAISS/sum_result_1.txt', 'w') as file:
         file.write('\n'.join(llm_r1))
 
-    with open('./Desktop/FAISS-PC/sum_result_2.txt', 'w') as file:
+    with open('./Desktop/Python/FAISS/sum_result_2.txt', 'w') as file:
         file.write(llm_r2)
 
 #---------------------------------------------------------------------------
 # MAIN
 #---------------------------------------------------------------------------
-
-
-
-# -------------------------------------- Primary Operations
-
-documents = input_data()    #Generates Embeddings - Only need to run once
-embed_save(documents)       #Generates Embeddings - Only need to run once
 
 # --------- For Timing
 print('-'*110)
@@ -117,14 +117,20 @@ start = datetime.now()
 print(start)
 
 
+# -------------------------------------- Primary Operations
+
+#documents = input_data()    #Generates Embeddings - Only need to run once
+#embed_save(documents)       #Generates Embeddings - Only need to run once
+
+v_result = []
 llm_r1 = []
 vector_db = load_data()
-v_data = v_query(vector_db)
+test_data = v_query(vector_db)
 
+#print(llm_r1)
 #llm_r2 = llm_write(llm_r1)
-llm_r2 = llm_write(v_data)
-
-#output_backup()
+llm_r2 = llm_write(test_data)
+output_backup()
 
 
 # --------- For Timing
