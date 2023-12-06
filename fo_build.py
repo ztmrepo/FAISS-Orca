@@ -55,8 +55,8 @@ def v_query(v_db):
         print(f'Document Name: {doc.metadata}')
         print(f'Score : {score}\n')
 
-        result_string = str(doc.page_content) + '[[Page]]' + str(doc.metadata["page"])
-        llm_sum(result_string)
+        #result_string = str(doc.page_content) + '[[Page]]' + str(doc.metadata["page"])
+        #llm_sum(result_string)
 
     return docs_and_scores
 
@@ -119,8 +119,11 @@ print(start)
 
 llm_r1 = []
 vector_db = load_data()
-v_query(vector_db)
-llm_r2 = llm_write(llm_r1)
+v_data = v_query(vector_db)
+
+#llm_r2 = llm_write(llm_r1)
+llm_r2 = llm_write(v_data)
+
 #output_backup()
 
 
