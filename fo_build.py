@@ -70,8 +70,9 @@ def llm_sum(v_data):
     prompt = cfg['sum_prompt_1']
     article = str(v_data)
     query = prompt + article
+    single_turn_prompt = f"GPT4 Correct User: {query}<|end_of_turn|>GPT4 Correct Assistant:"
     
-    output = llm(query, max_tokens=4096)
+    output = llm(single_turn_prompt, max_tokens=4096)
     text_content = output['choices'][0]['text']
     llm_r1.append(str(text_content))
 
@@ -85,8 +86,9 @@ def llm_write(v_data):
     #print (article)
 
     query = prompt + article
+    single_turn_prompt = f"GPT4 Correct User: {query}<|end_of_turn|>GPT4 Correct Assistant:"
     
-    output = llm(query, max_tokens=4096)
+    output = llm(single_turn_prompt, max_tokens=4096)
     text_content = output['choices'][0]['text']
 
     print('-'*80)
