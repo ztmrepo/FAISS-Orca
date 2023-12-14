@@ -38,6 +38,7 @@ def vector_query():
     encoder = SentenceTransformer("all-MiniLM-L6-v2")
     index = faiss.read_index(cfg['embed_path'])  
     
+    #Step 4 - Encode Vector
     search_vector = encoder.encode(search_text)
     _vector = np.array([search_vector])
     faiss.normalize_L2(_vector)
@@ -80,7 +81,7 @@ def llm_summary():
 #   Main
 #-----------------------------------------------------------
 
-#create_embeddings()
+create_embeddings()
 search_text = 'What is NVIDIA\'s CUDA strategy?'
 sum_prompt = 'You are an equity research analyst. Determine the answer to the following question. ' + search_text + '  Only include facts that are directly mentioned in the article. Make sure all details from the article are captured in your summary. Article: '
 result_number = 5
